@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaizeen — Narrativa Visual Sin Límites</title>
+<meta name="description" content="Proceso de creación de productos multimedia — Kaizeen">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Montserrat:wght@300;400;500;600;700;800&family=Alex+Brush&display=swap" rel="stylesheet">
+
+<style>
+  @font-face{
+    font-family:'Mayonice';
+    src: url('assets/fonts/Mayonice.otf') format('opentype'),
+         url('assets/fonts/Mayonice.ttf') format('truetype');
+    font-display: swap;
+  }
+
+  :root{
+    /* ---------- Paleta oficial (Manual de Marca, pág. 06) ---------- */
+    --vino:        #4D0E13;
+    --morado:      #4E2660;
+    --crema:       #EADCB9;
+    --naranja:     #EA9C3F;
+    --nude:        #CBA49F;
+    --negro:       #000000;
+
+    /* ---------- Tokens de uso ---------- */
+    --bg:          var(--negro);
+    --bg-vino:     var(--vino);
+    --ink:         var(--crema);
+    --ink-dim:     rgba(234,220,185,.62);
+    --accent:      var(--naranja);
+    --accent-2:    var(--morado);
+    --line:        rgba(234,220,185,.18);
+
+    --font-display: 'Climate Crisis', sans-serif;
+    --font-script:  'Mayonice', 'Alex Brush', cursive;
+    --font-body:    'Montserrat', sans-serif;
+
+    --rail-w: 220px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:
+      radial-gradient(1200px 700px at 85% -10%, rgba(78,38,96,.35), transparent 60%),
+      radial-gradient(900px 600px at -10% 90%, rgba(77,14,19,.55), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--naranja); color:#000; }
+
+  a{ color: inherit; text-decoration: none; }
+
+  /* Grano de textura sutil, coherente con "Textura" del manual (pág. 07) */
+  .grain{
+    position: fixed; inset:0; pointer-events:none; z-index: 40;
+    opacity:.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero{
+    min-height: 100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding: 8vh 8vw 10vh;
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero::before{ /* mira / retícula — firma visual tomada de "Simbología" */
+    content:"";
+    position:absolute; top:8vh; right:8vw;
+    width:180px; height:180px;
+    border:1px solid var(--nude);
+    border-radius:50%;
+    opacity:.5;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; top:calc(8vh + 90px); right:calc(8vw + 90px);
+    width:1px; height:220px; background:var(--nude); opacity:.35;
+    transform: translate(-50%,-25%);
+  }
+  .eyebrow{
+    font-family: var(--font-body);
+    font-size: .78rem; letter-spacing:.32em; text-transform:uppercase;
+    color: var(--accent); margin-bottom: 1.6rem;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); }
+
+  h1.brandline{
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: .92;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  h1.brandline .script{
+    display:block;
+    font-family: var(--font-script);
+    text-transform:none;
+    font-size: .42em;
+    color: var(--nude);
+    margin-top: .1em;
+  }
+  .hero-sub{
+    max-width: 46ch;
+    margin-top: 2.2rem;
+    color: var(--ink-dim);
+    font-size: 1.05rem;
+  }
+  .hero-meta{
+    margin-top: 3.5rem;
+    display:flex; gap:3rem; flex-wrap:wrap;
+    font-size:.85rem; color: var(--ink-dim);
+  }
+  .hero-meta strong{ display:block; color:var(--ink); font-family:var(--font-body); font-weight:600; }
+
+  /* ============================================================
+     LAYOUT: rail lateral + contenido
+     ============================================================ */
+  .layout{
+    display:grid;
+    grid-template-columns: var(--rail-w) 1fr;
+  }
+
+  nav.rail{
+    position: sticky; top:0; align-self:start; height:100vh;
+    border-right: 1px solid var(--line);
+    padding: 3rem 1.8rem;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .rail-brand{
+    font-family: var(--font-display);
+    font-size:1.1rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  .rail-list{ list-style:none; margin-top:3rem; display:flex; flex-direction:column; gap:1.1rem; }
+  .rail-list a{
+    font-size:.82rem; color: var(--ink-dim);
+    display:flex; align-items:baseline; gap:.6rem;
+    transition: color .25s ease, transform .25s ease;
+  }
+  .rail-list a .num{
+    font-family: var(--font-display); font-size:.95rem; color: var(--nude);
+  }
+  .rail-list a:hover, .rail-list a.active{ color: var(--ink); transform: translateX(3px); }
+  .rail-list a.active .num{ color: var(--accent); }
+  .rail-foot{ font-size:.7rem; color: var(--ink-dim); letter-spacing:.05em; }
+
+  main{ padding-bottom: 12vh; }
+
+  /* ============================================================
+     SECCIONES DE PROCESO
+     ============================================================ */
+  section.step{
+    padding: 7rem 6vw;
+    border-bottom: 1px solid var(--line);
+    position:relative;
+    scroll-margin-top: 2rem;
+  }
+  section.step:nth-of-type(odd){
+    background: linear-gradient(180deg, rgba(78,38,96,.10), transparent 40%);
+  }
+
+  .step-head{
+    display:flex; align-items:flex-end; gap:1.6rem; margin-bottom:2.2rem;
+    flex-wrap:wrap;
+  }
+  .step-num{
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: transparent;
+    -webkit-text-stroke: 1px var(--nude);
+    line-height:.8;
+  }
+  .step-title{
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.4vw, 3rem);
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .step-title .script{
+    display:inline-block; margin-left:.5rem;
+    font-family: var(--font-script); text-transform:none;
+    color: var(--accent); font-size: .55em;
+  }
+  .step-desc{
+    max-width: 62ch; color: var(--ink-dim); font-size: .98rem; margin-bottom: 2.4rem;
+  }
+
+  /* Marco de "registro" para incrustar PDFs y videos, inspirado en
+     Simbología → Registro (cruz + punto) del manual, pág. 07 */
+  .media-frame{
+    position: relative;
+    border: 1px solid var(--line);
+    background: rgba(234,220,185,.03);
+    padding: 1.4rem;
+  }
+  .media-frame::before, .media-frame::after{
+    content:""; position:absolute; width:14px; height:14px;
+    border: 1px solid var(--accent);
+  }
+  .media-frame::before{ top:-1px; left:-1px; border-right:0; border-bottom:0; }
+  .media-frame::after{ bottom:-1px; right:-1px; border-left:0; border-top:0; }
+
+  .media-frame iframe,
+  .media-frame video{
+    width: 100%;
+    height: 70vh;
+    max-height: 640px;
+    border: 0;
+    display:block;
+    background:#0a0a0a;
+  }
+  .media-frame video{ height:auto; max-height:640px; }
+
+  .media-fallback{
+    display:flex; flex-direction:column; align-items:flex-start; gap:1rem;
+    padding: 3rem 1rem; color: var(--ink-dim); font-size:.9rem;
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:.6rem;
+    font-family: var(--font-body); font-weight:600; font-size:.8rem;
+    letter-spacing:.08em; text-transform:uppercase;
+    color: var(--negro); background: var(--accent);
+    padding: .85rem 1.5rem;
+    transition: background .25s ease, transform .25s ease;
+  }
+  .btn:hover{ background: var(--crema); transform: translateY(-2px); }
+  .btn.ghost{
+    background: transparent; color: var(--ink); border:1px solid var(--nude);
+  }
+  .btn.ghost:hover{ border-color: var(--accent); color: var(--accent); background:transparent; }
+
+  .filehint{
+    margin-top: .9rem; font-size:.72rem; color: var(--ink-dim);
+    letter-spacing:.02em;
+  }
+  .filehint code{
+    background: rgba(234,220,185,.08); padding:.1rem .4rem; color:var(--nude);
+  }
+
+  /* ============================================================
+     FASES — sí es una secuencia real del proceso, por eso
+     mantenemos numeración (ver manual: Simbología / Dirección)
+     ============================================================ */
+  .fases{
+    padding: 7rem 6vw;
+    background: var(--vino);
+    border-bottom: 1px solid var(--line);
+  }
+  .fases .step-title{ color: var(--crema); margin-bottom: 3rem; }
+  .fases-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 2.2rem;
+  }
+  .fase-card{ border-top: 1px solid rgba(234,220,185,.3); padding-top:1.2rem; }
+  .fase-card .n{
+    font-family: var(--font-display); font-size:1.8rem; color: var(--accent);
+    display:block; margin-bottom:.5rem;
+  }
+  .fase-card p{ font-size:.88rem; color: rgba(234,220,185,.75); }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer{
+    padding: 5rem 6vw 3rem;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:2rem;
+  }
+  footer .logo{
+    font-family: var(--font-display); font-size:1.6rem; text-transform:uppercase; color:var(--ink);
+  }
+  footer .script{ font-family: var(--font-script); color:var(--nude); font-size:1.1rem; display:block; }
+  footer .foot-links{ display:flex; gap:2rem; font-size:.8rem; color:var(--ink-dim); }
+  footer .foot-links a:hover{ color: var(--accent); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+    nav.rail{
+      position: static; height:auto; border-right:0; border-bottom:1px solid var(--line);
+      flex-direction:row; align-items:center; justify-content:space-between;
+      padding: 1.2rem 6vw; overflow-x:auto;
+    }
+    .rail-list{ flex-direction:row; margin-top:0; gap:1.4rem; white-space:nowrap; }
+    .rail-foot{ display:none; }
+    section.step{ padding: 4.5rem 6vw; }
+    .media-frame iframe{ height:50vh; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <p class="eyebrow"><span class="dot"></span>Proceso de creación de productos multimedia</p>
+  <h1 class="brandline">
+    Narrativa visual
+    <span class="script">sin límites</span>
+  </h1>
+  <p class="hero-sub">
+    Cada fotografía, identidad o pieza audiovisual debe transmitir una sensación
+    antes que una explicación. Este es el recorrido completo del proyecto para hacerlo realidad.
+  </p>
+  <div class="hero-meta">
+    <div><strong>Isabella Vásquez Castro</strong>Dirección creativa</div>
+    <div><strong>Kaizeen</strong>Diseño · Fotografía · Cine · Dirección de arte · Programación </div>
+    <div><strong>Bogotá, Colombia</strong>2026</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= NAV LATERAL ================= -->
+  <nav class="rail" aria-label="Etapas del proceso">
+    <div>
+      <div class="rail-brand"></div>
+      <ul class="rail-list">
+        <li><a href="#investigacion"><span class="num">01</span> Investigación</a></li>
+        <li><a href="#brief"><span class="num">02</span> Brief</a></li>
+        <li><a href="#concepto"><span class="num">03</span> Concepto gráfico</a></li>
+        <li><a href="#idea"><span class="num">04</span> Idea</a></li>
+        <li><a href="#manual"><span class="num">05</span> Manual de marca</a></li>
+        <li><a href="#sketch"><span class="num">06</span> Sketch</a></li>
+        <li><a href="#wireframe"><span class="num">07</span> Wireframe</a></li>
+        <li><a href="#mockup"><span class="num">08</span> Mockup</a></li>
+        <li><a href="#prototipo"><span class="num">09</span> Prototipo</a></li>
+      </ul>
+    </div>
+    <p class="rail-foot">Diseño profesional<br>sin perder el alma.</p>
+  </nav>
+
+  <main>
+
+    <!-- ============ 01 · INVESTIGACIÓN ============ -->
+    <section class="step" id="investigacion">
+      <div class="step-head">
+        <span class="step-num">01</span>
+        <h2 class="step-title">Investigación <span class="script">de campo</span></h2>
+      </div>
+      <p class="step-desc">
+        Recolección y análisis de referentes de portafolios y narrativas visuales
+        que sostienen las decisiones tomadas en el proyecto.
+      </p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Investigación.pdf"
+          title="Investigación de portafolios (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Investigación.pdf</code></p>
+    </section>
+
+    <!-- ============ 02 · BRIEF ============ -->
+    <section class="step" id="brief">
+      <div class="step-head">
+        <span class="step-num">02</span>
+        <h2 class="step-title">Brief</h2>
+      </div>
+      <p class="step-desc">
+        Propósito, público y lineamientos del encargo: el punto de partida
+        estratégico antes de tocar el lenguaje visual.
+      </p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Brief.pdf"
+          title="Brief del proyecto (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Brief.pdf</code></p>
+    </section>
+
+    <!-- ============ 03 · CONCEPTO GRÁFICO ============ -->
+    <section class="step" id="concepto">
+      <div class="step-head">
+        <span class="step-num">03</span>
+        <h2 class="step-title">Concepto <span class="script">gráfico</span></h2>
+      </div>
+      <p class="step-desc">
+        El misterio como eje: la idea que no se revela por completo y que
+        articula el resto de las decisiones de diseño.
+      </p>
+      <div class="media-frame">
+        <video controls preload="metadata" poster="video/Concepto grafico.mp4">
+          <source src="video/Concepto grafico.mp4" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+      <p class="filehint">Archivo esperado en <code>video/Concepto grafico.mp4</code></p>
+    </section>
+
+    <!-- ============ 04 · IDEA ============ -->
+    <section class="step" id="idea">
+      <div class="step-head">
+        <span class="step-num">04</span>
+        <h2 class="step-title">Idea</h2>
+      </div>
+      <p class="step-desc">
+        Registro sonoro del proceso creativo: cómo se articuló la idea central
+        antes de pasar a construcción visual.
+      </p>
+      <div class="media-frame media-frame--audio">
+        <audio controls preload="metadata" style="width:100%;">
+          <source src="audio/Idea.m4a" type="audio/mpeg">
+          <source src="audio/Idea.ogg" type="audio/ogg">
+          Tu navegador no soporta audio HTML5.
+        </audio>
+      </div>
+      <p class="filehint">Archivo esperado en <code>audio/Idea.m4a</code></p>
+    </section>
+
+    <!-- ============ 05 · MANUAL DE MARCA ============ -->
+    <section class="step" id="manual">
+      <div class="step-head">
+        <span class="step-num">05</span>
+        <h2 class="step-title">Manual <span class="script">de marca</span></h2>
+      </div>
+      <p class="step-desc">
+        Sistema de identidad completo de Kaizeen: idea central, tono de voz,
+        logo y variables, paleta cromática, tipografía y aplicaciones.
+      </p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Manual de Marca.pdf"
+          title="Manual de Marca Kaizeen (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Manual de Marca.pdf</code></p>
+    </section>
+
+    <!-- ============ 06 · SKETCH ============ -->
+    <section class="step" id="sketch">
+      <div class="step-head">
+        <span class="step-num">06</span>
+        <h2 class="step-title">Sketch</h2>
+      </div>
+      <p class="step-desc">Primeros trazos y exploración de composición antes de digitalizar.</p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Sketch.pdf"
+          title="Sketches (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Sketch.pdf</code></p>
+    </section>
+
+    <!-- ============ 07 · WIREFRAME ============ -->
+    <section class="step" id="wireframe">
+      <div class="step-head">
+        <span class="step-num">07</span>
+        <h2 class="step-title">Wireframe</h2>
+      </div>
+      <p class="step-desc">Estructura y jerarquía de la interfaz, sin resolución visual todavía.</p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Wireframe.pdf"
+          title="Wireframe (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Wireframe.pdf</code></p>
+    </section>
+
+    <!-- ============ 08 · MOCKUP ============ -->
+    <section class="step" id="mockup">
+      <div class="step-head">
+        <span class="step-num">08</span>
+        <h2 class="step-title">Mockup</h2>
+      </div>
+      <p class="step-desc">Vista de alta fidelidad con la identidad visual ya aplicada.</p>
+      <div class="media-frame">
+        <iframe
+          src="pdfs/Mockup.pdf"
+          title="Mockup (PDF)"
+          loading="lazy"></iframe>
+      </div>
+      <p class="filehint">Archivo esperado en <code>pdfs/Mockup.pdf</code></p>
+    </section>
+
+    <!-- ============ 09 · PROTOTIPO ============ -->
+    <section class="step" id="prototipo">
+      <div class="step-head">
+        <span class="step-num">09</span>
+        <h2 class="step-title">Prototipo</h2>
+      </div>
+      <p class="step-desc">Versión funcional del proyecto, navegable de principio a fin.</p>
+      <div class="media-fallback">
+        <a class="btn" href="https://isapx12.github.io/PORTAFOLIO-WEB-FINAL/" target="_blank" rel="noopener">Ver prototipo ↗</a>
+        <span class="filehint">Reemplaza el enlace por la URL final de tu prototipo publicado.</span>
+      </div>
+    </section>
+
+    <!-- ============ FASES ============ -->
+    <section class="fases">
+      <h2 class="step-title">Fases <span class="script">del proceso</span></h2>
+      <div class="fases-grid">
+        <div class="fase-card"><span class="n">01</span><p>Recolección de información</p></div>
+        <div class="fase-card"><span class="n">02</span><p>Exploración visual</p></div>
+        <div class="fase-card"><span class="n">03</span><p>Concepto gráfico</p></div>
+        <div class="fase-card"><span class="n">04</span><p>Idea</p></div>
+        <div class="fase-card"><span class="n">05</span><p>Post-producción</p></div>
+        <div class="fase-card"><span class="n">06</span><p>Producción</p></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="logo">Kaizeen<span class="script">narrativa visual sin límites</span></div>
+  <div class="foot-links">
+    <a href="#" >Instagram</a>
+    <a href="#">LinkedIn</a>
+    <a href="mailto:hola@isabella.vc">hola@isabella.vc</a>
+  </div>
+</footer>
+
+<script>
+  // Resalta el enlace activo del rail según la sección visible
+  const links = document.querySelectorAll('.rail-list a');
+  const sections = document.querySelectorAll('section.step');
+  const byId = id => document.querySelector(`.rail-list a[href="#${id}"]`);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = byId(entry.target.id);
+      if(!link) return;
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
